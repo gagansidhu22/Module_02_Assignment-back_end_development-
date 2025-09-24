@@ -1,5 +1,12 @@
 import express, { Express, Request, Response } from "express";
+// Importing morgan
+import morgan from "morgan";
+
 const app: Express = express();
+
+// Use morgan for HTTP request logging
+app.use(morgan("combined"));
+
 
 // Health End Point
 interface HealthResponse {
@@ -27,3 +34,4 @@ app.get("/api/v1/info", (_req: Request, res: Response) => {
     };
     res.json(info);
 });
+export default app;

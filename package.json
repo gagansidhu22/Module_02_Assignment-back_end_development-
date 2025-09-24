@@ -18,6 +18,7 @@
   "homepage": "https://github.com/gagansidhu22/Module_02_Assignment-back_end_development-#readme",
   "description": "",
   "devDependencies": {
+    "@types/morgan": "^1.9.10",
     "@types/node": "^24.5.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
