@@ -1,6 +1,10 @@
 import express, { Express, Request, Response } from "express";
 // Importing morgan
 import morgan from "morgan";
+import employeeRoutes from "./api/v1/routes/employeeRoutes";
+import branchRoutes from "./api/v1/routes/branchRoutes";
+
+
 
 const app: Express = express();
 
@@ -34,4 +38,8 @@ app.get("/api/v1/info", (_req: Request, res: Response) => {
     };
     res.json(info);
 });
+
+// Routes
+app.use("/api/v1/employees", employeeRoutes);
+app.use("/api/v1/branches", branchRoutes);
 export default app;
