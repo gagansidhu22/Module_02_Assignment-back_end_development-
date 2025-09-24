@@ -28,7 +28,7 @@ export default tseslint.config(
     },
     {
         rules: {
-            // Core focus: enforce types on variables, function return types, and parameters
+            // Core focus: enforce types on variables, function return types, and parameter
             "@typescript-eslint/explicit-function-return-type": "error", // Require return types on functions
             "@typescript-eslint/no-unused-vars": "error", // Disallow unused variables
             "@typescript-eslint/no-unused-vars": [
