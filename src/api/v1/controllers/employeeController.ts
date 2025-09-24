@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import * as employeeService from "../services/employeeService";
 
-export const getEmployees = (req: Request, res: Response) => {
+export const getEmployees = (_req: Request, res: Response) => {
   res.json(employeeService.getAllEmployees());
 };
 
