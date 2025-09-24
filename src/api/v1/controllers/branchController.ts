@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import * as branchService from "../services/branchService";
 
-export const getBranches = (req: Request, res: Response) => {
+export const getBranches = (_req: Request, res: Response) => {
   res.json(branchService.getAllBranches());
 };
 
