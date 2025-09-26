@@ -1,6 +1,12 @@
 import request from "supertest";
 import app from "../src/app";
 
+describe("Branch API Endpoints", () => {
+  it("dummy test to confirm Jest works", () => {
+    expect(true).toBe(true);
+  });
+});
+
 let createdEmployeeId: number;
 
 describe("Employee API Endpoints", () => {
