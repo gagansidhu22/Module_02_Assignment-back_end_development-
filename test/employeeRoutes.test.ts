@@ -91,7 +91,7 @@ describe("Employee API Endpoints", () => {
     });
   });
 
-  // Update Employee
+  // update employee
   describe("PUT /api/v1/employees/:id", () => {
     it("should update an existing employee", async () => {
       // Arrange
