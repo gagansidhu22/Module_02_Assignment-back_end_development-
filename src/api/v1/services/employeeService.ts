@@ -28,3 +28,12 @@ export const deleteEmployee = (id: number): boolean => {
   employees.splice(index, 1);
   return true;
 };
+
+// Get employees by branch
+export const getEmployeesByBranch = (branchId: number) =>
+  employees.filter(emp => emp.branchId === branchId);
+
+// Get employees by department
+export const getEmployeesByDepartment = (department: string) =>
+  employees.filter(emp => emp.department.toLowerCase() === department.toLowerCase());
+
