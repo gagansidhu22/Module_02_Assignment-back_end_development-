@@ -7,7 +7,7 @@ const app: Express = express();
 
 // Middleware
 app.use(morgan("combined"));
-app.use(express.json()); // <-- ✅ this parses JSON request bodies
+app.use(express.json()); 
 
 // Health Endpoint
 interface HealthResponse {
