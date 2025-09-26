@@ -1,35 +1,38 @@
-import { branches, Branch } from "../../../data/branches";
+interface Branch {
+  id: number;
+  name: string;
+  address: string;
+  phone: string;
+}
 
-// Get all branches
-export const getAllBranches = (): Branch[] => {
+let branches: Branch[] = [];
+let nextId = Date.now();
+
+export const createBranch = (data: Omit<Branch, "id">): Branch => {
+  const branch: Branch = { id: nextId++, ...data };
+  branches.push(branch);
+  return branch;
+};
+
+export const getBranches = (): Branch[] => {
   return branches;
 };
 
-// Get a branch by ID
 export const getBranchById = (id: number): Branch | undefined => {
-  return branches.find(branch => branch.id === id);
+  return branches.find((b) => b.id === id);
 };
 
-// Add a new branch
-export const addBranch = (newBranch: Branch): Branch => {
-  branches.push(newBranch);
-  return newBranch;
+export const updateBranch = (id: number, updates: Partial<Omit<Branch, "id">>): Branch | null => {
+  const branch = branches.find((b) => b.id === id);
+  if (!branch) return null;
+
+  Object.assign(branch, updates);
+  return branch;
 };
 
-// Update a branch
-export const updateBranch = (id: number, updatedData: Partial<Branch>): Branch | null => {
-  const index = branches.findIndex(branch => branch.id === id);
-  if (index === -1) return null;
-
-  branches[index] = { ...branches[index], ...updatedData };
-  return branches[index];
-};
-
-// Delete a branch
 export const deleteBranch = (id: number): boolean => {
-  const index = branches.findIndex(branch => branch.id === id);
+  const index = branches.findIndex((b) => b.id === id);
   if (index === -1) return false;
-
   branches.splice(index, 1);
   return true;
 };
