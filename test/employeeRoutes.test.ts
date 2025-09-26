@@ -4,7 +4,7 @@ import app from "../src/app";
 let createdEmployeeId: number;
 
 describe("Employee API Endpoints", () => {
-  // CREATE EMPLOYEE
+  // Create Employee
   describe("POST /api/v1/employees", () => {
     it("should create a new employee when all fields are provided", async () => {
       // Arrange
@@ -39,7 +39,7 @@ describe("Employee API Endpoints", () => {
     });
   });
 
-  // GET ALL EMPLOYEES
+  // Get all employees
   describe("GET /api/v1/employees", () => {
     // Arrange
     it("should return all employees", async () => {
@@ -62,7 +62,7 @@ describe("Employee API Endpoints", () => {
     });
   });
 
-  // GET EMPLOYEE BY ID
+  // Get Employee by Id
   describe("GET /api/v1/employees/:id", () => {
     // Arrange
     it("should return employee by ID", async () => {
@@ -85,7 +85,7 @@ describe("Employee API Endpoints", () => {
     });
   });
 
-  // UPDATE EMPLOYEE
+  // Update Employee
   describe("PUT /api/v1/employees/:id", () => {
     it("should update an existing employee", async () => {
       // Arrange
@@ -109,7 +109,7 @@ describe("Employee API Endpoints", () => {
     });
   });
 
-  // DELETE EMPLOYEE
+  // Delete Employee
   describe("DELETE /api/v1/employees/:id", () => {
     // Arrange
     it("should delete employee by ID", async () => {
