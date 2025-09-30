@@ -41,4 +41,10 @@ app.get("/api/v1/info", (_req: Request, res: Response) => {
 app.use("/api/v1/employees", employeeRoutes);
 app.use("/api/v1/branches", branchRoutes);
 
+app.use((_req, res) => {
+  res.status(404).json({ error: "Route not found", path: _req.originalUrl });
+});
+
+
+
 export default app;
