@@ -2,61 +2,61 @@
 import { Request, Response } from "express";
 import * as employeeService from "../services/employeeService";
 
-// Get all employees
-export const getEmployees = (_req: Request, res: Response) => {
-  res.status(200).json(employeeService.getAllEmployees());
-};
-
-// Get one employee by ID
-export const getEmployee = (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const employee = employeeService.getEmployeeById(id);
-
+export function createEmployee(req: Request, res: Response): void {
+  const employee = employeeService.createEmployee(req.body);
   if (!employee) {
-    return res.status(404).json({ message: "Employee not found" });
+    res.status(400).json({ message: "Missing required fields" });
+  } else {
+    res.status(201).json(employee);
   }
+}
 
-  res.status(200).json(employee);
-};
+export function getEmployees(_req: Request, res: Response): void {
+  res.json(employeeService.getAllEmployees());
+}
 
-// Add employee
-export const createEmployee = (req: Request, res: Response) => {
-  const newEmployee = employeeService.addEmployee(req.body);
-  res.status(201).json(newEmployee);
-};
+export function getEmployee(req: Request, res: Response): void {
+  const id = Number(req.params.id);
+  const emp = employeeService.getEmployeeById(id);
+  if (!emp) res.status(404).json({ message: "Employee not found" });
+  else res.json(emp);
+}
 
-// Update employee
-export const updateEmployee = (req: Request, res: Response) => {
+export function updateEmployee(req: Request, res: Response): void {
   const id = Number(req.params.id);
   const updated = employeeService.updateEmployee(id, req.body);
-
   if (!updated) {
-    return res.status(404).json({ message: "Employee not found" });
+    if (!req.body || Object.keys(req.body).length === 0) {
+      res.status(400).json({ message: "No fields to update" });
+    } else {
+      res.status(404).json({ message: "Employee not found" });
+    }
+  } else {
+    res.json(updated);
   }
+}
 
-  res.status(200).json(updated);
-};
-
-// Delete employee
-export const deleteEmployee = (req: Request, res: Response) => {
+export function deleteEmployee(req: Request, res: Response): void {
   const id = Number(req.params.id);
   const deleted = employeeService.deleteEmployee(id);
+  if (!deleted) res.status(404).json({ message: "Employee not found" });
+  else res.json({ message: "Employee deleted" });
+}
 
-  if (!deleted) {
-    return res.status(404).json({ message: "Employee not found" });
-  }
-
-  res.status(200).json({ message: "Employee deleted" });
-};
-
-// Get employees by branch
-export const getEmployeesByBranch = (req: Request, res: Response) => {
+export function getEmployeesByBranch(req: Request, res: Response): void {
   const branchId = Number(req.params.branchId);
-  res.status(200).json(employeeService.getEmployeesByBranch(branchId));
-};
+  if (isNaN(branchId)) {
+    res.status(400).json({ message: "Invalid branchId" });
+    return;
+  }
+  res.json(employeeService.getEmployeesByBranch(branchId) || []);
+}
 
-// Get employees by department
-export const getEmployeesByDepartment = (req: Request, res: Response) => {
+export function getEmployeesByDepartment(req: Request, res: Response): void {
   const department = req.params.department;
-  res.status(200).json(employeeService.getEmployeesByDepartment(department));
-};
+  try {
+    res.json(employeeService.getEmployeesByDepartment(department));
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+}
