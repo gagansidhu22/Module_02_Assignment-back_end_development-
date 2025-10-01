@@ -1,12 +1,7 @@
-interface Branch {
-  id: number;
-  name: string;
-  address: string;
-  phone: string;
-}
+import { Branch, branches as sampleBranches } from "../../../data/branches";
 
-let branches: Branch[] = [];
-let nextId = Date.now();
+let branches: Branch[] = [...sampleBranches];
+let nextId = Math.max(...branches.map(b => b.id)) + 1;
 
 export const createBranch = (data: Omit<Branch, "id">): Branch => {
   const branch: Branch = { id: nextId++, ...data };
