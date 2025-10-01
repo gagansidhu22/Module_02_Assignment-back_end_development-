@@ -3,7 +3,7 @@ import * as employeeController from "../controllers/employeeController";
 
 const router = express.Router();
 
-// Specific routes first
+// Specific routes 
 router.get("/branch/:branchId", employeeController.getEmployeesByBranch);
 router.get("/department/:department", employeeController.getEmployeesByDepartment);
 

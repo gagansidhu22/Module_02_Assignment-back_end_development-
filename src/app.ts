@@ -5,7 +5,6 @@ import branchRoutes from "./api/v1/routes/branchRoutes";
 
 const app: Express = express();
 
-// Middleware
 app.use(morgan("combined"));
 app.use(express.json()); 
 
