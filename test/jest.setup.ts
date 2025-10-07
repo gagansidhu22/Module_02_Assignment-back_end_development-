@@ -1,4 +1,4 @@
-// Always mock firebase in every test
+// Always mock firebase in Every test
 jest.mock("../config/firebaseConfig", () => ({
     auth: {
         verifyIdToken: jest.fn(),
