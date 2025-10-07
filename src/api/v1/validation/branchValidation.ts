@@ -6,3 +6,11 @@ export const branchSchema = Joi.object({
   address: Joi.string().min(5).max(200).required(),
   phone: Joi.string().pattern(/^[0-9]{10}$/).required(),
 });
+
+
+
+
+
+
+
+
