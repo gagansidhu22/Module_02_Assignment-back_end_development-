@@ -1,7 +1,7 @@
 // src/api/v1/services/employeeService.ts
-import { Employee } from "../../../data/employees";
+import { Employee, employees } from "../../../data/employees";
 
-let employees: Employee[] = [];
+
 let nextId = 1;
 
 // Create employee with validation
