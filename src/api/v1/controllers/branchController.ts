@@ -1,111 +1,132 @@
 import { Request, Response } from "express";
 import * as branchService from "../services/branchService";
 
-export const createBranch = (req: Request, res: Response) => {
-  const { name, address, phone } = req.body;
+// ✅ Create Branch
+export const createBranch = async (req: Request, res: Response) => {
+  try {
+    const { name, address, phone } = req.body;
 
-  if (!name || !address || !phone) {
-    return res.status(400).json({
-      success: false,
-      message: "Name, address, and phone are required",
-    });
-  }
-
-  const branch = branchService.createBranch({ name, address, phone });
-  res.status(201).json({
-    success: true,
-    message: "Branch created successfully",
-    data: branch,
-  });
-};
-
-export const getBranches = (_req: Request, res: Response) => {
-  const branches = branchService.getBranches();
-  res.status(200).json({
-    success: true,
-    message: "Branches retrieved successfully",
-    data: branches,
-  });
-};
-
-export const getBranchById = (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const branch = branchService.getBranchById(id);
-
-  if (!branch) {
-    return res.status(404).json({
-      success: false,
-      message: "Branch not found",
-    });
-  }
-
-  res.status(200).json({
-    success: true,
-    message: "Branch retrieved successfully",
-    data: branch,
-  });
-};
-
-export const updateBranch = (req: Request, res: Response): void => {
-  const id = Number(req.params.id);
-  const updates: Record<string, unknown> = req.body;
-
-  if (!updates || Object.keys(updates).length === 0) {
-    res.status(400).json({
-      success: false,
-      message: "At least one field must be provided for update",
-    });
-    return;
-  }
-
-  const allowedFields = ["name", "address", "phone"];
-
-  for (const key of Object.keys(updates)) {
-    if (!allowedFields.includes(key)) {
-      res.status(400).json({
+    if (!name || !address || !phone) {
+      return res.status(400).json({
         success: false,
-        message: `Invalid field: ${key}`,
+        message: "Name, address, and phone are required",
       });
-      return;
     }
-    if (typeof updates[key] === "string" && updates[key] === "") {
-      res.status(400).json({
-        success: false,
-        message: `${key} cannot be empty`,
-      });
-      return;
-    }
-  }
 
-  const branch = branchService.updateBranch(id, updates);
-  if (!branch) {
-    res.status(404).json({
-      success: false,
-      message: "Branch not found",
+    const branch = await branchService.createBranch({ name, address, phone });
+    res.status(201).json({
+      success: true,
+      message: "Branch created successfully",
+      data: branch,
     });
-    return;
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to create branch" });
   }
-
-  res.status(200).json({
-    success: true,
-    message: "Branch updated successfully",
-    data: branch,
-  });
 };
 
-export const deleteBranch = (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const success = branchService.deleteBranch(id);
-
-  if (!success) {
-    return res.status(404).json({
-      success: false,
-      message: "Branch not found",
+// ✅ Get All Branches
+export const getBranches = async (_req: Request, res: Response) => {
+  try {
+    const branches = await branchService.getBranches();
+    res.status(200).json({
+      success: true,
+      message: "Branches retrieved successfully",
+      data: branches,
     });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to retrieve branches" });
   }
+};
 
-  res.status(200).json({
-    success: true,
-    message: "Branch deleted successfully",
-  });
+// ✅ Get Branch By ID
+export const getBranchById = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id; // ✅ keep as string
+    const branch = await branchService.getBranchById(id);
+
+    if (!branch) {
+      return res.status(404).json({
+        success: false,
+        message: "Branch not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Branch retrieved successfully",
+      data: branch,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to retrieve branch" });
+  }
+};
+
+// ✅ Update Branch
+export const updateBranch = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id; // ✅ string
+    const updates: Record<string, unknown> = req.body;
+
+    if (!updates || Object.keys(updates).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one field must be provided for update",
+      });
+    }
+
+    const allowedFields = ["name", "address", "phone"];
+    for (const key of Object.keys(updates)) {
+      if (!allowedFields.includes(key)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid field: ${key}`,
+        });
+      }
+      if (typeof updates[key] === "string" && updates[key] === "") {
+        return res.status(400).json({
+          success: false,
+          message: `${key} cannot be empty`,
+        });
+      }
+    }
+
+    const branch = await branchService.updateBranch(id, updates);
+
+    if (!branch) {
+      return res.status(404).json({
+        success: false,
+        message: "Branch not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Branch updated successfully",
+      data: branch,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to update branch" });
+  }
+};
+
+// ✅ Delete Branch
+export const deleteBranch = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id; // ✅ string
+    const success = await branchService.deleteBranch(id);
+
+    if (!success) {
+      return res.status(404).json({
+        success: false,
+        message: "Branch not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Branch deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to delete branch" });
+  }
 };

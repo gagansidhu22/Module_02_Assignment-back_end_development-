@@ -2,8 +2,8 @@
 export interface ApiResponse<T> {
   success: boolean;
   message: string;
-  data?: T;          // optional payload for success
-  error?: string;    // optional error message
+  data?: T | null;    // ✅ allows undefined or null
+  error?: string;     // optional error message
 }
 
 // Example success response type

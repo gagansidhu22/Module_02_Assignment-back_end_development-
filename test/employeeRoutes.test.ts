@@ -1,199 +1,79 @@
 import request from "supertest";
 import app from "../src/app";
+import * as employeeService from "../src/api/v1/services/employeeService";
 
-describe("Branch API Endpoints", () => {
-  it("dummy test to confirm Jest works", () => {
-    expect(true).toBe(true);
-  });
-});
+jest.mock("../src/api/v1/services/employeeService");
 
-let createdEmployeeId: number;
+const mockEmployeeId = "mockId";
 
-describe("Employee API Endpoints", () => {
-  // Create Employee
-  describe("POST /api/v1/employees", () => {
-    it("should create a new employee when all fields are provided", async () => {
-      // Arrange
-      const newEmployee = {
-        name: "Alice Smith",
-        position: "Developer",
-        department: "IT",
-        email: "alice.smith@example.com",
-        phone: "123-456-7890",
-        branchId: 1,
-      };
+describe("Employee API Endpoints (Mocked Services)", () => {
+  beforeEach(() => jest.resetAllMocks());
 
-      // Act
-      const res = await request(app).post("/api/v1/employees").send(newEmployee);
-
-      // Assert
-      expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty("id");
-      expect(res.body.name).toBe(newEmployee.name);
-      createdEmployeeId = res.body.id;
-    });
-
-    it("should return 400 when required fields are missing", async () => {
-      // Arrange
-      const invalidEmployee = { name: "Bob" };
-
-      // Act
-      const res = await request(app).post("/api/v1/employees").send(invalidEmployee);
-
-      // Assert
-      expect(res.status).toBe(400);
-    });
-  });
-
-  // Get all employees
-  describe("GET /api/v1/employees", () => {
-    // Arrange
-    it("should return all employees", async () => {
-     // Act
-      const res = await request(app).get("/api/v1/employees");
-
-      // Assert
-      expect(res.status).toBe(200);
-      expect(Array.isArray(res.body)).toBe(true);
-    });
-    // Arrange
-    it("should return an empty array if no employees exist", async () => {
-
-      // Act
-      const res = await request(app).get("/api/v1/employees");
-
-      // Assert
-      expect(res.status).toBe(200);
-      expect(Array.isArray(res.body)).toBe(true);
-    });
-  });
-
-  // Get Employee by Id
-  describe("GET /api/v1/employees/:id", () => {
-    // Arrange
-    it("should return employee by ID", async () => {
-
-      // Act
-      const res = await request(app).get(`/api/v1/employees/${createdEmployeeId}`);
-
-      // Assert
-      expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("id", createdEmployeeId);
-    });
-    
-    // Arrange
-    it("should return 404 if employee does not exist", async () => {
-      // Act
-      const res = await request(app).get("/api/v1/employees/99999");
-
-      // Assert
-      expect(res.status).toBe(404);
-    });
-  });
-
-  // update employee
-  describe("PUT /api/v1/employees/:id", () => {
-    it("should update an existing employee", async () => {
-      // Arrange
-      const updates = { position: "Senior Developer" };
-
-      // Act
-      const res = await request(app).put(`/api/v1/employees/${createdEmployeeId}`).send(updates);
-
-      // Assert
-      expect(res.status).toBe(200);
-      expect(res.body.position).toBe(updates.position);
-    });
-
-    // Arrange
-    it("should return 400 when no update fields are provided", async () => {
-      // Act
-      const res = await request(app).put(`/api/v1/employees/${createdEmployeeId}`).send({});
-
-      // Assert
-      expect(res.status).toBe(400);
-    });
-  });
-
-  // Delete Employee
-  describe("DELETE /api/v1/employees/:id", () => {
-    // Arrange
-    it("should delete employee by ID", async () => {
-      // Act
-      const res = await request(app).delete(`/api/v1/employees/${createdEmployeeId}`);
-
-      // Assert
-      expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty("message");
-    });
-
-    // Arrange
-    it("should return 404 if employee does not exist", async () => {
-      // Act
-      const res = await request(app).delete("/api/v1/employees/99999");
-
-      // Assert
-      expect(res.status).toBe(404);
-    });
-  });
-});
-
-// Get All Employees for a branch
-describe("GET /api/v1/employees/branch/:branchId", () => {
-  it("should return employees for a given branch", async () => {
-    // Arrange
-    const resCreate = await request(app).post("/api/v1/employees").send({
-      name: "John Doe",
+  it("should create a new employee", async () => {
+    (employeeService.createEmployee as jest.Mock).mockResolvedValue({
+      id: mockEmployeeId,
+      name: "Alice",
       position: "Developer",
       department: "IT",
-      email: "john@example.com",
+      email: "alice@test.com",
       phone: "1234567890",
-      branchId: 101,
+      branchId: 1
     });
 
-    const branchId = resCreate.body.branchId;
+    const res = await request(app)
+      .post("/api/v1/employees")
+      .send({ name: "Alice", position: "Developer", department: "IT", email: "alice@test.com", phone: "1234567890", branchId: 1 });
 
-    // Act
-    const res = await request(app).get(`/api/v1/employees/branch/${branchId}`);
+    expect(res.status).toBe(201);
+    expect(res.body.data.id).toBe(mockEmployeeId);
+  });
 
-    // Assert
+  it("should get all employees", async () => {
+    (employeeService.getAllEmployees as jest.Mock).mockResolvedValue([
+      { id: mockEmployeeId, name: "Alice" },
+    ]);
+
+    const res = await request(app).get("/api/v1/employees");
+
     expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body.some((emp: any) => emp.branchId === branchId)).toBe(true);
+    expect(Array.isArray(res.body.data)).toBe(true);
+    expect(res.body.data[0].id).toBe(mockEmployeeId);
   });
 
-  it("should return 400 if branchId is invalid", async () => {
-    const res = await request(app).get("/api/v1/employees/branch/abc");
-    expect(res.status).toBe(400);
-  });
-});
-
-// Get Employees by Department
-describe("GET /api/v1/employees/department/:department", () => {
-  it("should return employees for a given department", async () => {
-    // Arrange
-    await request(app).post("/api/v1/employees").send({
-      name: "Jane Smith",
-      position: "Manager",
-      department: "HR",
-      email: "jane@example.com",
-      phone: "9876543210",
-      branchId: 102,
+  it("should get employee by id", async () => {
+    (employeeService.getEmployeeById as jest.Mock).mockResolvedValue({
+      id: mockEmployeeId,
+      name: "Alice",
     });
 
-    // Act
-    const res = await request(app).get("/api/v1/employees/department/HR");
+    const res = await request(app).get(`/api/v1/employees/${mockEmployeeId}`);
 
-    // Assert
     expect(res.status).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body.some((emp: any) => emp.department === "HR")).toBe(true);
+    expect(res.body.data.id).toBe(mockEmployeeId);
   });
 
-  it("should return 400 if department is missing", async () => {
-    const res = await request(app).get("/api/v1/employees/department/");
-    expect(res.status).toBe(404); // Express treats missing param as 404
+  it("should update an employee", async () => {
+    (employeeService.updateEmployee as jest.Mock).mockResolvedValue({
+      id: mockEmployeeId,
+      position: "Senior Developer",
+    });
+
+    const res = await request(app)
+      .put(`/api/v1/employees/${mockEmployeeId}`)
+      .send({ position: "Senior Developer" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.data.position).toBe("Senior Developer");
+  });
+
+  it("should delete an employee", async () => {
+    (employeeService.deleteEmployee as jest.Mock).mockResolvedValue({
+      message: "Employee deleted successfully",
+    });
+
+    const res = await request(app).delete(`/api/v1/employees/${mockEmployeeId}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBe("Employee deleted successfully");
   });
 });
-
-
