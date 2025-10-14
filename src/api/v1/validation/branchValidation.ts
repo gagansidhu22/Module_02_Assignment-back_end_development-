@@ -19,7 +19,7 @@ export const updateBranchSchema = Joi.object({
 
 // delete branch validation
 export const deleteBranchSchema = Joi.object({
-  id: Joi.number().integer().required(),
+  id: Joi.string().required(),
 });
 
 

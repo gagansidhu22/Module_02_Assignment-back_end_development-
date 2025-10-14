@@ -11,7 +11,7 @@ export const createEmployeeSchema = Joi.object({
     .min(10)
     .max(15)
     .required(),
-  branchId: Joi.number().integer().required(), 
+  branchId: Joi.string().required(), 
 });
 
 // Update Employee Validation
@@ -24,10 +24,10 @@ export const updateEmployeeSchema = Joi.object({
     .pattern(/^[0-9\-]+$/)
     .min(10)
     .max(15),
-  branchId: Joi.number().integer(),
+  branchId: Joi.string().required(),
 });
 
 // DELETE Employee Validation
 export const deleteEmployeeSchema = Joi.object({
-  id: Joi.number().integer().required(),
+  id: Joi.string().required(),
 });
