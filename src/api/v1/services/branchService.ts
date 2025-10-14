@@ -9,7 +9,7 @@ import {
 
 const COLLECTION = "branches";
 
-// ✅ Create a new branch
+//Create a new branch
 export const createBranch = async (data: Omit<Branch, "id">): Promise<Branch> => {
   try {
     if (!data.name || !data.address || !data.phone) {
@@ -28,7 +28,7 @@ export const createBranch = async (data: Omit<Branch, "id">): Promise<Branch> =>
   }
 };
 
-// ✅ Get all branches
+// Get all branches
 export const getBranches = async (): Promise<Branch[]> => {
   try {
     const snapshot = await getDocuments(COLLECTION);
@@ -46,7 +46,7 @@ export const getBranches = async (): Promise<Branch[]> => {
   }
 };
 
-// ✅ Get branch by ID
+// Get branch by ID
 export const getBranchById = async (id: string): Promise<Branch | null> => {
   try {
     const doc = await getDocumentById(COLLECTION, id);
@@ -63,7 +63,7 @@ export const getBranchById = async (id: string): Promise<Branch | null> => {
   }
 };
 
-// ✅ Update branch
+//Update branch
 export const updateBranch = async (
   id: string,
   updates: Partial<Omit<Branch, "id">>
@@ -88,7 +88,7 @@ export const updateBranch = async (
   }
 };
 
-// ✅ Delete branch
+//Delete branch
 export const deleteBranch = async (id: string): Promise<boolean> => {
   try {
     await deleteDocument(COLLECTION, id);

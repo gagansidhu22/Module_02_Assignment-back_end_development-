@@ -3,7 +3,7 @@ import { db } from "../../../../config/firebaseConfig";
 
 
 /**
- * Creates a new document in a specified Firestore collection.
+
  * @param {string} collectionName - The name of the collection.
  * @param {Partial<T>} data - The data for the new document.
  * @returns {Promise<string>} - The ID of the newly created document.

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as branchService from "../services/branchService";
 
-// ✅ Create Branch
+// Create Branch
 export const createBranch = async (req: Request, res: Response) => {
   try {
     const { name, address, phone } = req.body;
@@ -24,7 +24,7 @@ export const createBranch = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Get All Branches
+//Get All Branches
 export const getBranches = async (_req: Request, res: Response) => {
   try {
     const branches = await branchService.getBranches();
@@ -38,7 +38,7 @@ export const getBranches = async (_req: Request, res: Response) => {
   }
 };
 
-// ✅ Get Branch By ID
+//Get Branch By ID
 export const getBranchById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id; // ✅ keep as string
@@ -61,7 +61,7 @@ export const getBranchById = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Update Branch
+//Update Branch
 export const updateBranch = async (req: Request, res: Response) => {
   try {
     const id = req.params.id; // ✅ string
@@ -109,7 +109,7 @@ export const updateBranch = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Delete Branch
+//Delete Branch
 export const deleteBranch = async (req: Request, res: Response) => {
   try {
     const id = req.params.id; // ✅ string

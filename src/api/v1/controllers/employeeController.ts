@@ -3,7 +3,7 @@ import * as employeeService from "../services/employeeService";
 import { ApiResponse } from "../models/responseModel";
 import { Employee } from "../../../data/employees";
 
-// ✅ Create Employee
+// Create Employee
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const employee = await employeeService.createEmployee(req.body);
@@ -19,7 +19,7 @@ export const createEmployee = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Get All Employees
+// Get All Employees
 export const getAllEmployees = async (_req: Request, res: Response) => {
   try {
     const employees = await employeeService.getAllEmployees();
@@ -35,7 +35,7 @@ export const getAllEmployees = async (_req: Request, res: Response) => {
   }
 };
 
-// ✅ Get Employee By ID
+// Get Employee By ID
 export const getEmployeeById = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -60,7 +60,7 @@ export const getEmployeeById = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Update Employee
+// Update Employee
 export const updateEmployee = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -85,7 +85,7 @@ export const updateEmployee = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Delete Employee
+// Delete Employee
 export const deleteEmployee = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -105,7 +105,7 @@ export const deleteEmployee = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Get Employees by Branch
+// Get Employees by Branch
 export const getEmployeesByBranch = async (req: Request, res: Response) => {
   try {
     const branchId = Number(req.params.branchId);
@@ -135,7 +135,7 @@ export const getEmployeesByBranch = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Get Employees by Department
+// Get Employees by Department
 export const getEmployeesByDepartment = async (req: Request, res: Response) => {
   try {
     const department = req.params.department;
