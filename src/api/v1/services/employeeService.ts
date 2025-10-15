@@ -1,67 +1,78 @@
-// src/api/v1/services/employeeService.ts
+// import statements
 import { Employee } from "../../../data/employees";
+import {
+  createDocument,
+  getDocuments,
+  getDocumentById,
+  updateDocument,
+  deleteDocument,
+} from "../repositories/firestoreRepository";
 
-let employees: Employee[] = [];
-let nextId = 1;
+const COLLECTION = "employees";
 
-// Create employee with validation
-export function createEmployee(data: Partial<Employee>): Employee | null {
-  if (!data.name || !data.position || !data.department || !data.email || !data.phone || !data.branchId) {
-    return null; // Missing required fields
+// Helper to convert Firestore string ID to number (if needed)
+const convertId = (id: string): number => {
+  const num = Number(id);
+  return Number.isNaN(num) ? 0 : num; // fallback if Firestore ID is non-numeric
+};
+
+//Create Employee
+export const createEmployee = async (data: Partial<Employee>): Promise<Employee> => {
+  const requiredFields: (keyof Employee)[] = ["name", "position", "department", "email", "phone", "branchId"];
+  for (const field of requiredFields) {
+    if (!data[field]) throw new Error(`Missing required field: ${field}`);
   }
 
-  const newEmployee: Employee = {
-    id: nextId++,
-    name: data.name,
-    position: data.position,
-    department: data.department,
-    email: data.email,
-    phone: data.phone,
-    branchId: data.branchId,
-  };
+  const id = await createDocument<Employee>(COLLECTION, data as Employee);
+  return { ...(data as Employee), id: convertId(id) };
+};
 
-  employees.push(newEmployee);
-  return newEmployee;
-}
+// Get All Employees
+export const getAllEmployees = async (): Promise<Employee[]> => {
+  const snapshot = await getDocuments(COLLECTION);
+  return snapshot.docs.map((doc) => ({ ...(doc.data() as Omit<Employee, "id">), id: convertId(doc.id) }));
+};
 
-// Get all employees
-export function getAllEmployees(): Employee[] {
-  return employees;
-}
+//Get Employee by ID
+export const getEmployeeById = async (id: string): Promise<Employee | null> => {
+  const doc = await getDocumentById(COLLECTION, id);
+  if (!doc) return null;
+  return { ...(doc.data() as Omit<Employee, "id">), id: convertId(doc.id) };
+};
 
-// Get employee by ID
-export function getEmployeeById(id: number): Employee | undefined {
-  return employees.find(emp => emp.id === id);
-}
+// Update Employee
+export const updateEmployee = async (id: string, data: Partial<Employee>): Promise<Employee | null> => {
+  if (!data || Object.keys(data).length === 0) throw new Error("No fields to update");
 
-// Update employee
-export function updateEmployee(id: number, data: Partial<Employee>): Employee | null {
-  const emp = employees.find(emp => emp.id === id);
-  if (!emp) return null;
+  const existing = await getEmployeeById(id);
+  if (!existing) return null;
 
-  if (!data.name && !data.position && !data.department && !data.email && !data.phone && !data.branchId) {
-    return null; // No update fields provided
+  await updateDocument<Employee>(COLLECTION, id, data as Partial<Employee>);
+  return getEmployeeById(id);
+};
+
+// Delete Employee
+export const deleteEmployee = async (id: string): Promise<boolean> => {
+  const existing = await getEmployeeById(id);
+  if (!existing) return false;
+
+  try {
+    await deleteDocument(COLLECTION, id);
+    return true;
+  } catch (error) {
+    console.error("Error deleting employee:", error);
+    return false;
   }
+};
 
-  Object.assign(emp, data);
-  return emp;
-}
+// Get Employees by Branch
+export const getEmployeesByBranch = async (branchId: number): Promise<Employee[]> => {
+  const employees = await getAllEmployees();
+  return employees.filter((e) => e.branchId === branchId);
+};
 
-// Delete employee
-export function deleteEmployee(id: number): boolean {
-  const index = employees.findIndex(emp => emp.id === id);
-  if (index === -1) return false;
-  employees.splice(index, 1);
-  return true;
-}
-
-// Get employees by branch
-export function getEmployeesByBranch(branchId: number): Employee[] | null {
-  if (isNaN(branchId)) return null;
-  return employees.filter(emp => emp.branchId === branchId);
-}
-
-// Get employees by department
-export function getEmployeesByDepartment(department: string): Employee[] {
-  return employees.filter(emp => emp.department.toLowerCase() === department.toLowerCase());
-}
+// Get Employees by Department
+export const getEmployeesByDepartment = async (department: string): Promise<Employee[]> => {
+  const employees = await getAllEmployees();
+  return employees.filter((e) => e.department === department);
+};
