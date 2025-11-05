@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import setupSwagger from "../config/swagger";
 import morgan from "morgan";
 import dotenv from "dotenv";
 // Load environment variables BEFORE your internal imports!
@@ -47,6 +48,7 @@ app.use((_req, res) => {
   res.status(404).json({ error: "Route not found", path: _req.originalUrl });
 });
 
-
+// Setup Swagger
+setupSwagger(app);
 
 export default app;
