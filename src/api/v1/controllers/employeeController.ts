@@ -3,7 +3,7 @@ import * as employeeService from "../services/employeeService";
 import { ApiResponse } from "../models/responseModel";
 import { Employee } from "../../../data/employees";
 
-// Create Employee
+// Create employee
 export const createEmployee = async (req: Request, res: Response) => {
   try {
     const employee = await employeeService.createEmployee(req.body);
