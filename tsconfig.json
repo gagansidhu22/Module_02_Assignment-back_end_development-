@@ -19,11 +19,9 @@
     "baseUrl": "./",
     "paths": {
       "*": ["*"]
-    }
+    },
+    "types": ["node"]        
   },
-  "include": ["src/**/*", "test/**/*"],
+  "include": ["src/**/*", "test/**/*", "scripts/**/*"],  //<-- include scripts folder if needed
   "exclude": ["node_modules", "dist"]
 }
-
-
-      

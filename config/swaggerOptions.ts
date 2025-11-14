@@ -1,39 +1,41 @@
 import swaggerJsdoc from "swagger-jsdoc";
 
-const swaggerOptions: swaggerJsdoc.Options = {
-    definition: {
-        openapi: "3.0.0",
-        info: {
-            title: "Task Management API Documentation",
-            version: "1.0.0",
-            description:
-                "This is the API documentation for the Task Management application.",
-        },
-        servers: [
-            {
-                url: "http://localhost:3000/api/v1",
-                description: "Local server",
-            },
-        ],
-        components: {
-            securitySchemes: {
-                bearerAuth: {
-                    type: "http",
-                    scheme: "bearer",
-                    bearerFormat: "JWT",
-                },
-            },
-        },
-        security: [
-            {
-                bearerAuth: [],
-            },
-        ],
+export const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "API Documentation",
+      version: "1.0.0",
+      description: "Backend API for Assignment 03",
     },
-    apis: ["./src/api/v1/routes/*.ts", "./src/api/v1/validations/*.ts"], // Path to the API docs and schemas
+
+    components: {
+      schemas: {
+        CreateEmployee: {
+          type: "object",
+          properties: {
+            name: { type: "string", example: "John Doe" },
+            email: { type: "string", example: "john@example.com" },
+            department: { type: "string", example: "HR" },
+            branchId: { type: "integer", example: 1 }
+          },
+          required: ["name", "email", "department", "branchId"]
+        },
+
+        UpdateEmployee: {
+          type: "object",
+          properties: {
+            name: { type: "string", example: "Updated Name" },
+            email: { type: "string", example: "updated@example.com" },
+            department: { type: "string", example: "IT" },
+            branchId: { type: "integer", example: 3 }
+          }
+        }
+      }
+    },
+  },
+
+  apis: ["./src/routes/*.ts"],
 };
 
-// Generate the Swagger spec
-export const generateSwaggerSpec = (): object => {
-    return swaggerJsdoc(swaggerOptions);
-};
+export const generateSwaggerSpec = () => swaggerJsdoc(swaggerOptions);

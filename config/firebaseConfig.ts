@@ -21,8 +21,7 @@ import { getAuth, Auth } from "firebase-admin/auth";
  *
  * @returns {AppOptions} Firebase application configuration object
  * @throws {Error} If any required environment variables are missing
- */
-const getFirebaseConfig = (): AppOptions => {
+ */const getFirebaseConfig = (): AppOptions => {
     // Extract Firebase credentials from environment variables
     const {
         FIREBASE_PROJECT_ID,

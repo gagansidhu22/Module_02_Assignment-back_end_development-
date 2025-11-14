@@ -18,7 +18,7 @@ const router = Router();
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/validations/Branch'
+ *                 $ref: '#/components/schemas/CreateBranch'
  */
 router.get("/", branchController.getBranches);
 
@@ -34,7 +34,7 @@ router.get("/", branchController.getBranches);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/validations/BranchCreate'
+ *             $ref: '#/components/schemas/CreateBranch'
  *     responses:
  *       '201':
  *         description: Branch created successfully
@@ -63,7 +63,7 @@ router.post("/", validateRequest(createBranchSchema), branchController.createBra
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/validations/Branch'
+ *               $ref: '#/components/schemas/CreateBranch'
  *       '404':
  *         description: Branch not found
  */
@@ -87,7 +87,7 @@ router.get("/:id", branchController.getBranchById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/validations/BranchUpdate'
+ *             $ref: '#/components/schemas/UpdateBranch'
  *     responses:
  *       '200':
  *         description: Branch updated successfully
