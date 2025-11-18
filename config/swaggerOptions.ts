@@ -5,9 +5,9 @@ const swaggerOptions: swaggerJsdoc.Options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "ApI Documentation",
+      title: "Restaurant API",
       version: "1.0.0",
-      description: "This is the API documentation for the Assignment 5.",
+      description: "This is the API documentation for the Restaurant Management application.",
     },
     servers: [
       {
